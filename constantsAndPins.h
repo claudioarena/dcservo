@@ -47,21 +47,11 @@ bool mode = AUTOMATIC;
 
 /// PID SETTINGS ///
 
-//for ALT/DEC version, use RA values
-//float kp = 10, ki = 0.025, kd = 0.11; //Better for RA
-//float kp = 5, ki = 100, kd = 0.02; //Better for P_onE
-
-float kp_s = 1.2, ki_s = 32, kd_s = 0.03; //PID for slewing/large movements
-//Obtained using oscillations
-
-//double kp = 6.5, ki = 14, kd = 0.05;
-//double kp = 32, ki = 0.025, kd = 0.62; //Better for DEC
-//oat kp = 10, ki = 2.8, kd = 0.01; //Better for small movements
-
 //float kp = 2.0, ki = 0.1, kd = 0.02; //No load, 'fast' regime
 //float kp = 2.0, ki = 300, kd = 0.02; //No load, 'slow'/'close' regime
 
-float kp_t = 1.2, ki_t = 32, kd_t = 0.03; //PID for tracking/small movements
+float kp_s = 0.5, ki_s = 1, kd_s = 0.02; //PID for slewing/large movements
+float kp_t = 2.0, ki_t = 300, kd_t = 0.02; //PID for tracking/small movements
 long pidTrackingSampleTime = 1000L;
 long pidSlewingSampleTime = 1000L;
 

@@ -9,11 +9,12 @@ void help() {
 	Serial.println(F("X123 sets the target destination for the motor to 123 encoder pulses"));
 	Serial.println(F("T starts a sequence of random destinations (between 0 and 2000) every 3 seconds. T again will disable that"));
 	Serial.println(F("Q prints out the current values of P, I and D parameters"));
+	Serial.println(F("E prints out the set values of P, I and D parameters"));
 	Serial.println(F("W stores current values of P, I and D parameters into EEPROM"));
 	Serial.println(F("H prints this help message again"));
 	Serial.println(F("A toggles on/off showing regulator status every second"));
 #ifdef SIMULATE_TRACKING
-	Serial.println(F("E toggles on/off debug from PID library"));
+	Serial.println(F("U toggles on/off debug from PID library"));
 	Serial.println(F("Y toggles on/off simulated tracking"));
 	Serial.println(F("L sets the simulated tracking interval"));
 #endif#
@@ -44,10 +45,13 @@ void setParameter(char p, float value) {
 		switch (p) {
 		case 'P':
 			kp_t = value;
+			break;
 		case 'I':
 			ki_t = value;
+			break;
 		case 'D':
 			kd_t = value;
+			break;
 		}		
 		setPIDParameters();
 	}
@@ -55,13 +59,48 @@ void setParameter(char p, float value) {
 		switch (p) {
 		case 'P':
 			kp_s = value;
+			break;
 		case 'I':
 			ki_s = value;
+			break;
 		case 'D':
 			kd_s = value;
+			break;
 		}
 		setPIDParameters();
 	}
+}
+
+float getParameter(char p) {
+	float value;
+
+	if (pid_parameters_mode == TRACKING) {
+		switch (p) {
+		case 'P':
+			value = kp_t;
+			break;
+		case 'I':
+			value = ki_t;
+			break;
+		case 'D':
+			value = kd_t;
+			break;
+		}
+	}
+	else {
+		switch (p) {
+		case 'P':
+			value = kp_s;
+			break;
+		case 'I':
+			value = ki_s;
+			break;
+		case 'D':
+			value = kd_s ;
+			break;
+		}
+	}
+	return value;
 }
 
 void process_line() {
@@ -69,8 +108,8 @@ void process_line() {
 	if (cmd > 'Z') cmd -= 32;
 	switch (cmd) {
 	case 'P': setParameter('P', Serial.parseFloat()); break;
-	case 'D': setParameter('I', Serial.parseFloat()); break;
-	case 'I': setParameter('D', Serial.parseFloat()); break;
+	case 'I': setParameter('I', Serial.parseFloat()); break;
+	case 'D': setParameter('D', Serial.parseFloat()); break;
 	case '!': //Change PID parameters mode accessed
 		pid_parameters_mode = !pid_parameters_mode;
 #ifdef DEBUG
@@ -90,11 +129,12 @@ void process_line() {
 	case 'T': auto1 = !auto1; break;
 	case 'A': auto2 = !auto2; break;
 #ifdef SIMULATE_TRACKING
-	case 'E': myPID.toggleDebugPrint(); break;
+	case 'U': myPID.toggleDebugPrint(); break;
 	case 'Y': track = !track; break;
 	case 'L': trackInterval = Serial.parseInt(); break;
 #endif#
 	case 'Q': Serial.print("P="); Serial.print(myPID.GetKp()); Serial.print(" I="); Serial.print(myPID.GetKi()); Serial.print(" D="); Serial.println(myPID.GetKd()); break;
+	case 'E': Serial.print("P_s="); Serial.print(getParameter('P')); Serial.print(" I_s="); Serial.print(getParameter('I')); Serial.print(" D_s="); Serial.println(getParameter('D')); break;
 	case 'H': help(); break;
 	case 'W': writetoEEPROM(); break;
 	case 'K': eedump(); break;

@@ -73,13 +73,13 @@ void setPIDParameters() {
 	if (pid_mode == TRACKING) {
 		myPID.SetSampleTime(pidTrackingSampleTime);
 		//myPID.SetDFilterTime(1000L*10);
-		//myPID.SetOutFilterTime(1000L * 3);
+		//myPID.SetOutFilterTime(1000L * 2);
 		myPID.SetTunings(kp_t, ki_t, kd_t);
 	}
-	else {
+	else { //SLEWING
 		myPID.SetSampleTime(pidSlewingSampleTime);
 		//myPID.SetDFilterTime(1000L*10);
-		//myPID.SetOutFilterTime(1000L * 3);
+		myPID.SetOutFilterTime(1000L * 10);
 		myPID.SetTunings(kp_s, ki_s, kd_s);
 	}
 }
@@ -97,6 +97,7 @@ void loop1() {
 		if (GPIP(EN) == HIGH) {
 			setMotorMode(true);
 
+			multistep_pin_state = (GP16I & 0x01); // digitalRead(M_STEP). This is also update in the step ISR
 			if (multistep_pin_state != pid_mode) {//Went from slewing to tracking or other way around
 				pid_mode = multistep_pin_state;
 				setPIDParameters();
