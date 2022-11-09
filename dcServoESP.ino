@@ -72,15 +72,15 @@ void loop() {
 void setPIDParameters() {
 	if (pid_mode == TRACKING) {
 		myPID.SetSampleTime(pidTrackingSampleTime);
-		//myPID.SetDFilterTime(1000L*10);
-		//myPID.SetOutFilterTime(1000L * 2);
-		myPID.SetTunings(kp_t, ki_t, kd_t);
+		//myPID.SetDFilterTime(1000L*2);
+		myPID.SetOutFilterTime(1000L * 2);
+		myPID.SetTunings(kp_t, ki_t, kd_t, proportionalMode);
 	}
 	else { //SLEWING
 		myPID.SetSampleTime(pidSlewingSampleTime);
 		//myPID.SetDFilterTime(1000L*10);
-		myPID.SetOutFilterTime(1000L * 10);
-		myPID.SetTunings(kp_s, ki_s, kd_s);
+		myPID.SetOutFilterTime(1000L * 5);
+		myPID.SetTunings(kp_s, ki_s, kd_s, proportionalMode);
 	}
 }
 

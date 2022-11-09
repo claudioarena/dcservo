@@ -30,8 +30,8 @@
 #define POS_SKIP			200		//Records point only once every this many loops
 long pos[POS_RECORD]; int p = 0;
 
-#define TRACKING 0
-#define SLEWING 1
+#define TRACKING            1
+#define SLEWING             0
 bool pid_mode = TRACKING; //change PID parameters depending on the multistep pin status (tracking/slewing) - state machine status
 bool pid_parameters_mode = TRACKING; //keeps tracks of which PID parameters we wish to change using serial commands
 bool multistep_pin_state = TRACKING; //directly changes during a step interrupt, to follow the multistep pin status
@@ -45,14 +45,23 @@ bool track = false;
 #define MANUAL 0
 bool mode = AUTOMATIC;
 
+int proportionalMode = P_ON_E; //Default value
+//int proportionalMode = P_ON_M;
+
 /// PID SETTINGS ///
 
 //float kp = 2.0, ki = 0.1, kd = 0.02; //No load, 'fast' regime
 //float kp = 2.0, ki = 300, kd = 0.02; //No load, 'slow'/'close' regime
 
-float kp_s = 0.5, ki_s = 1, kd_s = 0.02; //PID for slewing/large movements
-float kp_t = 2.0, ki_t = 300, kd_t = 0.02; //PID for tracking/small movements
-long pidTrackingSampleTime = 1000L;
+//Proportional on error
+float kp_s = 0.5, ki_s = 0.3, kd_s = 0.04; //PID for slewing/large movements. D acceptable: >0.04
+float kp_t = 2.0, ki_t = 500, kd_t = 0.04; //PID for tracking/small movements. D acceptable: >0.04
+
+//Proportional on measurement
+//float kp_s = 0.5, ki_s = 1, kd_s = 0.02; //PID for slewing/large movements
+//float kp_t = 1.0, ki_t = 1000, kd_t = 0.02; //PID for tracking/small movements
+
+long pidTrackingSampleTime = 500L;
 long pidSlewingSampleTime = 1000L;
 
 /// VARIABLES ///
@@ -60,8 +69,9 @@ long pidSlewingSampleTime = 1000L;
 //1.7,3,.0.02
 double input = 0, output = 0, setpoint = 0;
 double lastFilteredOutput;
-PID myPID(&input, &output, &setpoint, kp_s, ki_s, kd_s, DIRECT);
-//PID myPID(&input, &output, &setpoint, kp, ki, kd, P_ON_E, DIRECT);
+PID myPID(&input, &output, &setpoint, kp_s, ki_s, kd_s, proportionalMode, DIRECT);
+//PID myPID(&encoder0Pos, &output, &target1, kp_s, ki_s, kd_s, proportionalMode, DIRECT);
+
 volatile long encoder0Pos = 0;
 volatile int directionLast = -1;
 boolean auto1 = false, auto2 = false, counting = false;

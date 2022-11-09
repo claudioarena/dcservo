@@ -1,4 +1,5 @@
 __vm**
 Debug/*
+Release/*
 *.vcxproj*
 PIDtunningTool_mine_pde/*

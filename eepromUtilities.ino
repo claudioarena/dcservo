@@ -99,7 +99,7 @@ void recoverPIDfromEEPROM() {
 		kp_s = eeget(24);
 		ki_s = eeget(32);
 		kd_s = eeget(40);
-		myPID.SetTunings(kp_t, ki_t, kd_t);
+		myPID.SetTunings(kp_t, ki_t, kd_t, proportionalMode);
 #endif
 	}
 	else {
