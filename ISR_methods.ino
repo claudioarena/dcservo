@@ -1,7 +1,7 @@
 const int QEM[16] = { 0,-1,1,2,1,0,2,-1,-1,2,0,1,2,1,-1,0 };               // Quadrature Encoder Matrix
 static unsigned char New, Old;
 
-void ICACHE_RAM_ATTR encoderInt() { // handle pin change interrupt for D2
+void IRAM_ATTR encoderInt() { // handle pin change interrupt for D2
 #ifdef HWD_DEBUG_ENCODER
 	GPOS = (1 << HW_DEBUG_PIN);  //digitalWrite(HW_DEBUG_PIN, 1);
 #endif
@@ -28,7 +28,7 @@ void ICACHE_RAM_ATTR encoderInt() { // handle pin change interrupt for D2
 #endif
 }
 
-void ICACHE_RAM_ATTR countStep() {
+void IRAM_ATTR countStep() {
 #ifdef HWD_DEBUG_STEPS
 	GPOS = (1 << HW_DEBUG_PIN);  //digitalWrite(HW_DEBUG_PIN, 1);
 #endif

@@ -16,8 +16,8 @@
 #include "constantsAndPins.h"
 #include <ESP8266WiFi.h>
 
-void ICACHE_RAM_ATTR encoderInt();
-void ICACHE_RAM_ATTR countStep();
+void IRAM_ATTR encoderInt();
+void IRAM_ATTR countStep();
 
 void setPins() {
 	pinMode(encoder0PinA, INPUT);
