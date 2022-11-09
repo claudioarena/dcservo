@@ -47,9 +47,8 @@ void setup() {
 	//Disable software watchdog
 	ESP.wdtDisable();
 
-	WiFi.begin();
-	WiFi.mode(WIFI_AP);
-	WiFi.softAPdisconnect(true);
+	WiFi.mode(WIFI_OFF);
+	WiFi.forceSleepBegin();
 
 #ifdef DEBUG
 	Serial.begin(1000000);
