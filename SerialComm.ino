@@ -17,7 +17,7 @@ void help() {
 	Serial.println(F("U toggles on/off debug from PID library"));
 	Serial.println(F("Y toggles on/off simulated tracking"));
 	Serial.println(F("L sets the simulated tracking interval"));
-#endif#
+#endif
 	Serial.println(F("B closes the connection\n"));
 }
 
@@ -33,9 +33,19 @@ void printPos() {
 	Serial.print(F(" LastEncPosCheck="));
 	Serial.print(lastEncPos);
 	Serial.print(F(" SpeedMode="));
-	Serial.print(pid_mode); //0=TRACKING, 1=SLEWING
+	if (pid_mode == SLEWING) {
+		Serial.print("SLEW");
+	}
+	else {
+		Serial.print("TRACK");
+	}
 	Serial.print(F(" PID par. set="));
-	Serial.print(pid_parameters_mode); //0=TRACKING, 1=SLEWING
+	if (pid_parameters_mode == SLEWING) {
+		Serial.print("SLEW");
+	}
+	else {
+		Serial.print("TRACK");
+	}
 	Serial.print(F(" EN="));
 	Serial.println(GPIP(EN));
 }
@@ -72,7 +82,7 @@ void setParameter(char p, float value) {
 }
 
 float getParameter(char p) {
-	float value;
+	float value = 0;
 
 	if (pid_parameters_mode == TRACKING) {
 		switch (p) {
@@ -132,7 +142,7 @@ void process_line() {
 	case 'U': myPID.toggleDebugPrint(); break;
 	case 'Y': track = !track; break;
 	case 'L': trackInterval = Serial.parseInt(); break;
-#endif#
+#endif
 	case 'Q': Serial.print("P="); Serial.print(myPID.GetKp()); Serial.print(" I="); Serial.print(myPID.GetKi()); Serial.print(" D="); Serial.println(myPID.GetKd()); break;
 	case 'E': Serial.print("P_s="); Serial.print(getParameter('P')); Serial.print(" I_s="); Serial.print(getParameter('I')); Serial.print(" D_s="); Serial.println(getParameter('D')); break;
 	case 'H': help(); break;

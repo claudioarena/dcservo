@@ -8,6 +8,15 @@ void ICACHE_RAM_ATTR encoderInt() { // handle pin change interrupt for D2
 
 	Old = New;
 	New = GPIP(encoder0PinA) * 2 + GPIP(encoder0PinB); // GPIP = digitalRead
+
+#ifdef HWD_DEBUG_ENCODER
+	if (QEM[Old * 4 + New] == 2) {
+		GPOC = (1 << HW_DEBUG_PIN); //digitalWrite(HW_DEBUG_PIN, 0);
+		GPOS = (1 << HW_DEBUG_PIN);  //digitalWrite(HW_DEBUG_PIN, 1);
+		GPOC = (1 << HW_DEBUG_PIN); //digitalWrite(HW_DEBUG_PIN, 0);
+	}
+#endif
+
 #ifdef INVERT_DIR
 	encoder0Pos -= QEM[Old * 4 + New];
 #else
