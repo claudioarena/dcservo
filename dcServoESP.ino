@@ -40,7 +40,10 @@ void setPins() {
 
 	attachInterrupt(encoder0PinA, encoderInt, CHANGE);
 	attachInterrupt(encoder0PinB, encoderInt, CHANGE);
+
+#if STEP_MODE == INTERRUPT_METHOD
 	attachInterrupt(Step, countStep, RISING);
+#endif
 }
 
 void setup() {
@@ -95,17 +98,30 @@ void loop1() {
 		//If motor enable
 		if (GPIP(EN) == HIGH) {
 			setMotorMode(true);
+#if STEP_MODE == LOOP_METHOD
+			oldStep = newStep;
+			newStep = digitalRead(Step);
 
+#ifdef DEBUG_TIMING
+			old_t = new_t;
+			new_t = micros();
+			if (new_t - old_t > 200) {
+				Serial.println(new_t - old_t);
+			}
+#endif
+
+			if (oldStep != newStep && newStep == HIGH) {
+				countStep();
+			}
+#endif
 			multistep_pin_state = (GP16I & 0x01); // digitalRead(M_STEP). This is also update in the step ISR
 			if (multistep_pin_state != pid_mode) {//Went from slewing to tracking or other way around
 				pid_mode = multistep_pin_state;
 				setPIDParameters();
 			}
 
-			//noInterrupts();
 			input = encoder0Pos;
 			setpoint = target1;
-			//interrupts();
 			myPID.Compute();
 			//safeMotor();
 			pwmOut(output);
@@ -134,12 +150,16 @@ void setMotorMode(bool enable) {
 	if (enable && mode == MANUAL) {
 		myPID.SetMode(AUTOMATIC);
 		mode = AUTOMATIC;
-		attachInterrupt(Step, countStep, RISING);
+#if STEP_MODE == INTERRUPT_METHOD
+			attachInterrupt(Step, countStep, RISING);
+#endif
 	}
 	if (enable == false && mode == AUTOMATIC) {
 		myPID.SetMode(MANUAL);
 		mode = MANUAL;
+#if STEP_MODE == INTERRUPT_METHOD
 		detachInterrupt(Step);
+#endif
 		pwmOut(0);
 	}
 }
