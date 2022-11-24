@@ -1,12 +1,12 @@
 /// DEBUG OPTIONS ///
 #define DEBUG
-#define DEBUG_TIMING
+//#define DEBUG_TIMING
 //#define PID_TUNE_OUT	//Used to register value during movement, for PID settings tune up
 //#define EEPROM_DEBUG	//Used to try and figure out problems in saving/loading of values to EEPROM
 //#define HWD_DEBUG_STEPS		//Used to toggle hardware pin to troubleshoot ISR
-//#define HWD_DEBUG_ENCODER
+#define HWD_DEBUG_ENCODER
 //#define INVERT_DIR //Inverts the direction the motor turns on +/- steps.
-#define SIMULATE_TRACKING
+//#define SIMULATE_TRACKING
 
 /// PINS ///
 #define encoder0PinA		13		// D7
@@ -18,8 +18,8 @@
 #define M_STEPS				16		// D0 - HARDCODED
 #define EN					5		// D81
 
-#define OUT_LIM_MAX			255
-#define OUT_LIM_MIN			-255
+#define OUT_LIM_MAX			200
+#define OUT_LIM_MIN			-200
 #define MULTISTEP_VALUE		32		//32 steps for each step pulse when in multi step mode
 #define SINGLESTEP_VALUE	1		//1 steps for each step pulse when not multi step mode
 #define HW_DEBUG_PIN		15		//D8, For debug, toggle pin when in ISR
@@ -52,8 +52,8 @@ bool track = false;
 #define MANUAL 0
 bool mode = AUTOMATIC;
 
-int proportionalMode = P_ON_E; //Default value
-//int proportionalMode = P_ON_M;
+int proportionalMode = P_ON_E;
+//int proportionalMode = P_ON_M; //Default value
 
 /// PID SETTINGS ///
 
@@ -62,7 +62,7 @@ int proportionalMode = P_ON_E; //Default value
 
 //Proportional on error
 float kp_s = 0.5, ki_s = 0.3, kd_s = 0.04; //PID for slewing/large movements. D acceptable: >0.04
-float kp_t = 2.0, ki_t = 500, kd_t = 0.04; //PID for tracking/small movements. D acceptable: >0.04
+float kp_t = 15.0, ki_t = 800, kd_t = 0.03; //PID for tracking/small movements. D acceptable: >0.04
 
 //Proportional on measurement
 //float kp_s = 0.5, ki_s = 1, kd_s = 0.02; //PID for slewing/large movements
@@ -78,7 +78,7 @@ double lastFilteredOutput;
 PID myPID(&input, &output, &setpoint, kp_s, ki_s, kd_s, proportionalMode, DIRECT);
 //PID myPID(&encoder0Pos, &output, &target1, kp_s, ki_s, kd_s, proportionalMode, DIRECT);
 
-volatile long encoder0Pos = 0;
+volatile double encoder0Pos = 0;
 volatile int directionLast = -1;
 boolean auto1 = false, auto2 = false, counting = false;
 long previousMillis = 0;        // will store last time LED was updated
@@ -91,7 +91,7 @@ unsigned long motorSafe = 2000UL; // will store the interval to protect the moto
 int lastMax = 0;              // have to also store the max to avoid +-255 values
 byte SafeMessageSent = false; //helps sends out the motor safe serial command only once
 
-volatile long target1 = 0;  // destination location at any moment
+volatile double target1 = 0;  // destination location at any moment
 
 bool newStep = LOW;
 bool oldStep = LOW;

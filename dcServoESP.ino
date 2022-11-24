@@ -75,7 +75,7 @@ void setPIDParameters() {
 	if (pid_mode == TRACKING) {
 		myPID.SetSampleTime(pidTrackingSampleTime);
 		//myPID.SetDFilterTime(1000L*2);
-		myPID.SetOutFilterTime(1000L * 2);
+		//myPID.SetOutFilterTime(1000L * 2);
 		myPID.SetTunings(kp_t, ki_t, kd_t, proportionalMode);
 	}
 	else { //SLEWING
