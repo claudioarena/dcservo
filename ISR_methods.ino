@@ -87,8 +87,9 @@ void pwmOut(int out) {
 	}
 }
 
+/*
 void safeMotor() {
-	/* Motor safe code */
+	// Motor safe code
 	bool onTarget = (input == setpoint); //If we're on target, we're safe
 	bool moving = (input != lastEncPos); //If motor has moved, we're safe
 
@@ -122,3 +123,4 @@ void safeMotor() {
 			}
 
 }
+*/

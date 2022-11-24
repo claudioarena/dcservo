@@ -88,7 +88,9 @@ void setPIDParameters() {
 
 void loop1() {
 	while (true) {
+#ifdef DEBUG
 		curTime = millis() + motorSafe; //Offset time to make sure this works from the start
+#endif
 		ESP.wdtFeed(); //Feed the hardware watchdog
 
 #ifdef DEBUG
@@ -164,6 +166,7 @@ void setMotorMode(bool enable) {
 	}
 }
 
+#ifdef SIMULATE_TRACKING
 void debug_SimulateTracking() {
 	unsigned long timeChange = (curTime - lastTrackTime);
 	if (track && timeChange >= trackInterval) {
@@ -176,6 +179,7 @@ void debug_SimulateTracking() {
 		lastTrackTime = curTime;
 	}
 }
+#endif
 
 void debug_pid_tune() {
 	//if(counting && abs(input-target1)<15) counting=false;

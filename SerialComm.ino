@@ -13,8 +13,8 @@ void help() {
 	Serial.println(F("W stores current values of P, I and D parameters into EEPROM"));
 	Serial.println(F("H prints this help message again"));
 	Serial.println(F("A toggles on/off showing regulator status every second"));
-#ifdef SIMULATE_TRACKING
 	Serial.println(F("U toggles on/off debug from PID library"));
+#ifdef SIMULATE_TRACKING
 	Serial.println(F("Y toggles on/off simulated tracking"));
 	Serial.println(F("L sets the simulated tracking interval"));
 #endif
@@ -138,8 +138,8 @@ void process_line() {
 	case 'X': target1 = Serial.parseInt(); p = 0; counting = true; for (int i = 0; i < POS_RECORD-1; i++) pos[i] = 0; break;
 	case 'T': auto1 = !auto1; break;
 	case 'A': auto2 = !auto2; break;
-#ifdef SIMULATE_TRACKING
 	case 'U': myPID.toggleDebugPrint(); break;
+#ifdef SIMULATE_TRACKING
 	case 'Y': track = !track; break;
 	case 'L': trackInterval = Serial.parseInt(); break;
 #endif
