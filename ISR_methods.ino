@@ -1,9 +1,10 @@
 const int QEM[16] = { 0,-1,1,2,1,0,2,-1,-1,2,0,1,2,1,-1,0 };               // Quadrature Encoder Matrix. 2 means we missed one step, so best guess is to add 2.
 static unsigned char New, Old;
 
+//Uncomment the HWD_DEGUB sessions as needed to get debug info on the interrupt, using an oscilloscope
 void IRAM_ATTR encoderInt() { // handle pin change interrupt for D2
 #ifdef HWD_DEBUG_ENCODER
-	GPOS = (1 << HW_DEBUG_PIN);  //digitalWrite(HW_DEBUG_PIN, 1);
+	//GPOS = (1 << HW_DEBUG_PIN);  //digitalWrite(HW_DEBUG_PIN, 1);
 #endif
 
 	Old = New;
@@ -17,7 +18,7 @@ void IRAM_ATTR encoderInt() { // handle pin change interrupt for D2
 			value = -2; //Best guess at missed step direction
 		}
 #ifdef HWD_DEBUG_ENCODER
-		GPOC = (1 << HW_DEBUG_PIN); //digitalWrite(HW_DEBUG_PIN, 0);
+		//GPOC = (1 << HW_DEBUG_PIN); //digitalWrite(HW_DEBUG_PIN, 0);
 		GPOS = (1 << HW_DEBUG_PIN);  //digitalWrite(HW_DEBUG_PIN, 1);
 		GPOC = (1 << HW_DEBUG_PIN); //digitalWrite(HW_DEBUG_PIN, 0);
 #endif
@@ -30,7 +31,7 @@ void IRAM_ATTR encoderInt() { // handle pin change interrupt for D2
 #endif
 
 #ifdef HWD_DEBUG_ENCODER
-	GPOC = (1 << HW_DEBUG_PIN); //digitalWrite(HW_DEBUG_PIN, 0);
+	//GPOC = (1 << HW_DEBUG_PIN); //digitalWrite(HW_DEBUG_PIN, 0);
 #endif
 }
 

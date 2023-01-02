@@ -1,10 +1,10 @@
 /// DEBUG OPTIONS ///
-#define DEBUG
+//#define DEBUG
 //#define DEBUG_TIMING
 //#define PID_TUNE_OUT	//Used to register value during movement, for PID settings tune up
 //#define EEPROM_DEBUG	//Used to try and figure out problems in saving/loading of values to EEPROM
 //#define HWD_DEBUG_STEPS		//Used to toggle hardware pin to troubleshoot ISR
-#define HWD_DEBUG_ENCODER
+//#define HWD_DEBUG_ENCODER
 //#define INVERT_DIR //Inverts the direction the motor turns on +/- steps.
 //#define SIMULATE_TRACKING
 
@@ -18,7 +18,7 @@
 #define M_STEPS				16		// D0 - HARDCODED
 #define EN					5		// D81
 
-#define OUT_LIM_MAX			200
+#define OUT_LIM_MAX			200    // Limit so that board can keep up with encoder interrupts
 #define OUT_LIM_MIN			-200
 #define MULTISTEP_VALUE		32		//32 steps for each step pulse when in multi step mode
 #define SINGLESTEP_VALUE	1		//1 steps for each step pulse when not multi step mode
@@ -56,17 +56,10 @@ int proportionalMode = P_ON_E;
 //int proportionalMode = P_ON_M; //Default value
 
 /// PID SETTINGS ///
+//Default values for tracking/slewing
+float kp_s = 2.0, ki_s = 500, kd_s = 0.02; //PID for slewing/large movements
+float kp_t = 5.0, ki_t = 500, kd_t = 0.03; //PID for tracking/small movements
 
-//float kp = 2.0, ki = 0.1, kd = 0.02; //No load, 'fast' regime
-//float kp = 2.0, ki = 300, kd = 0.02; //No load, 'slow'/'close' regime
-
-//Proportional on error
-float kp_s = 0.5, ki_s = 0.3, kd_s = 0.04; //PID for slewing/large movements. D acceptable: >0.04
-float kp_t = 15.0, ki_t = 800, kd_t = 0.03; //PID for tracking/small movements. D acceptable: >0.04
-
-//Proportional on measurement
-//float kp_s = 0.5, ki_s = 1, kd_s = 0.02; //PID for slewing/large movements
-//float kp_t = 1.0, ki_t = 1000, kd_t = 0.02; //PID for tracking/small movements
 
 long pidTrackingSampleTime = 500L;
 long pidSlewingSampleTime = 1000L;

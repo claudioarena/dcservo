@@ -9,7 +9,7 @@ void help() {
 	Serial.println(F("X123 sets the target destination for the motor to 123 encoder pulses"));
 	Serial.println(F("T starts a sequence of random destinations (between 0 and 2000) every 3 seconds. T again will disable that"));
 	Serial.println(F("Q prints out the current values of P, I and D parameters"));
-	Serial.println(F("E prints out the set values of P, I and D parameters"));
+	Serial.println(F("E prints out the set values of P, I and D parameters, based on selected parameter set (see !)"));
 	Serial.println(F("W stores current values of P, I and D parameters into EEPROM"));
 	Serial.println(F("H prints this help message again"));
 	Serial.println(F("A toggles on/off showing regulator status every second"));
